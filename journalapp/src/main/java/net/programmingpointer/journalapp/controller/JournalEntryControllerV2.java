@@ -1,6 +1,7 @@
 package net.programmingpointer.journalapp.controller;
 
 import net.programmingpointer.journalapp.entity.JournalEntry;
+import net.programmingpointer.journalapp.entity.JournalUserDto;
 import net.programmingpointer.journalapp.service.JournalEntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,8 @@ public class JournalEntryControllerV2 {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+
+
     @PostMapping
     public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry) {
         try {
@@ -46,8 +49,19 @@ public class JournalEntryControllerV2 {
 
     }
 
+    @GetMapping("getJournalUserByID/{id}")
+    public ResponseEntity<JournalUserDto> getJournalUserByID(@PathVariable Integer id)
+    {
+        Optional<JournalUserDto> journalUserDto = journalEntryService.getJournalUserByID(id);
+        if(journalUserDto.isPresent())
+        {
+            return  new ResponseEntity<>(journalUserDto.get(),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @GetMapping("id/{myId}")
-    public ResponseEntity<JournalEntry> getJournalEntryByID(@PathVariable String myId) {
+    public ResponseEntity<JournalEntry> getJournalEntryByID(@PathVariable Integer myId) {
         //return journalEntryService.getByID(myId).orElse(null);
         Optional<JournalEntry> journalEntry = journalEntryService.getByID(myId);
         if(journalEntry.isPresent())
@@ -58,13 +72,13 @@ public class JournalEntryControllerV2 {
     }
 
     @DeleteMapping("id/{myId}")
-    public ResponseEntity<?> deleteJournalEntryByID(@PathVariable String myId) {
+    public ResponseEntity<?> deleteJournalEntryByID(@PathVariable Integer myId) {
         journalEntryService.deleteEntry(myId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("id/{myId}")
-    public ResponseEntity<?> updateJournalEntryByID(@PathVariable String myID, @RequestBody JournalEntry newEntry) {
+    @PutMapping("id/")
+    public ResponseEntity<?> updateJournalEntryByID(@RequestParam Integer myID, @RequestBody JournalEntry newEntry) {
         JournalEntry old = journalEntryService.getByID(myID).orElse(null);
         if(old != null)
         {
@@ -76,5 +90,6 @@ public class JournalEntryControllerV2 {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         //journalEntryService.createEntry(old);
         //return null;
+        //localhost:8080/journal/id/?myID=1
     }
 }

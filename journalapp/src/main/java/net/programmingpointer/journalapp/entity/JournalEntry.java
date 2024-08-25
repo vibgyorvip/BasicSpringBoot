@@ -13,11 +13,18 @@ import java.time.LocalDateTime;
 @Data
 public class JournalEntry {
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Column(name="title",nullable = false)
     private String title;
 
+    @Column(name="content")
     private String content;
 
+    @Column(name="date")
     private LocalDateTime date;
+
+    @OneToOne(cascade =CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name="fk_userId", referencedColumnName = "id")
+    private User user;
 }
