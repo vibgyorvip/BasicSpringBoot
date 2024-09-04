@@ -1,5 +1,6 @@
 package net.programmingpointer.journalapp.controller;
 
+import jakarta.validation.Valid;
 import net.programmingpointer.journalapp.entity.JournalEntry;
 import net.programmingpointer.journalapp.entity.JournalUserDto;
 import net.programmingpointer.journalapp.service.JournalEntryService;
@@ -33,6 +34,18 @@ public class JournalEntryControllerV2 {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping("/journalUserDto")
+    public ResponseEntity<JournalEntry> createEntryDto(@Valid @RequestBody JournalUserDto journalUserDto) {
+        try {
+            JournalEntry entryDto = journalEntryService.createEntryDto(journalUserDto);
+            return new ResponseEntity<JournalEntry>(entryDto,HttpStatus.CREATED);
+        }catch(Exception e)
+        {
+            return new ResponseEntity<JournalEntry>(HttpStatus.BAD_REQUEST);
+        }
+
+
+    }
 
 
     @PostMapping
@@ -84,6 +97,13 @@ public class JournalEntryControllerV2 {
         {
             old.setContent(newEntry.getContent()!=null && !newEntry.getContent().equals("")?newEntry.getContent(): old.getContent());
             old.setTitle(newEntry.getTitle()!=null && !newEntry.getTitle().equals("")? newEntry.getTitle() : old.getTitle());
+
+            old.getUser().setUserName(newEntry.getUser().getUserName()!=null && !newEntry.getUser().getUserName().equals("")?newEntry.getUser().getUserName():old.getUser().getUserName());
+            old.getUser().setPassword(newEntry.getUser().getPassword()!=null&& !newEntry.getUser().getPassword().equals("")?newEntry.getUser().getPassword():old.getUser().getPassword());
+            old.getUser().setEmail(newEntry.getUser().getEmail()!=null && !newEntry.getUser().getEmail().equals("")?newEntry.getUser().getEmail():old.getUser().getEmail());
+            old.getUser().getAddress().setAddress_type(newEntry.getUser().getAddress().getAddress_type()!=null && !newEntry.getUser().getAddress().getAddress_type().equals("")?newEntry.getUser().getAddress().getAddress_type():old.getUser().getAddress().getAddress_type());
+            old.getUser().getAddress().setAddress(newEntry.getUser().getAddress().getAddress()!=null && !newEntry.getUser().getAddress().getAddress().equals("")?newEntry.getUser().getAddress().getAddress():old.getUser().getAddress().getAddress());
+
             journalEntryService.createEntry(old);
             return new ResponseEntity<>(old,HttpStatus.OK);
         }

@@ -24,7 +24,14 @@ public class JournalEntry {
     @Column(name="date")
     private LocalDateTime date;
 
-    @OneToOne(cascade =CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name="fk_userId", referencedColumnName = "id")
+    //@OneToOne(cascade =CascadeType.ALL,fetch = FetchType.EAGER)
+    //@JoinColumn(name="fk_userId", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "fk_user_id" ,nullable = false)
     private User user;
+
+
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name="fk_journalProfileId",referencedColumnName = "journalProfileId")
+    private JournalProfile journalProfile;
 }

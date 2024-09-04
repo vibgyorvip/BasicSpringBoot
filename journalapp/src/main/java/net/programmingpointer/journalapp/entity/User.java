@@ -27,6 +27,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "email")
+    private String email;
+
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "fk_address_id", referencedColumnName = "address_id")
+    private Address address;
+
+
  //   @OneToOne(mappedBy = "user" , cascade =CascadeType.ALL)
    // private JournalEntry journalEntry;
     //JournalEntry_id  == name of reference entity_primarykey of refrenced table
@@ -34,4 +42,7 @@ public class User {
 //    @JoinColumn(name = "fk_JournalEntry")
 //    private JournalEntry journalEntry ;
     //private List<JournalEntry> journalEntries= new ArrayList<>() ;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    private List<JournalEntry> journalEntries;
 }
